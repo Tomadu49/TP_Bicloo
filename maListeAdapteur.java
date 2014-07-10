@@ -1,8 +1,10 @@
 package com.example.tpbicloo;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,13 +12,14 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 public class maListeAdapteur extends ArrayAdapter<BikeStation> {
+	
 	private Context context;
 	private ArrayList<BikeStation> allBike;
 
 	private LayoutInflater mInflater;
 	private boolean mNotifyOnChange = true;
 
-	public maListeAdapteur(Context context, ArrayList<BikeStation> mListe) {
+	public maListeAdapteur(Context context, List<BikeStation> mListe) {
 		super(context, R.layout.layout_arrets);
 		this.context = context;
 	    this.allBike = new ArrayList<BikeStation>(mListe);
@@ -24,9 +27,13 @@ public class maListeAdapteur extends ArrayAdapter<BikeStation> {
 		// TODO Auto-generated constructor stub
 	}
 	
+	public ArrayList<BikeStation> getBikes(){
+		return allBike;
+	}
+	
 	@Override
 	public int getCount() {
-	    return allBike .size();
+	    return allBike.size();
 	}
 
 	@Override
@@ -42,7 +49,7 @@ public class maListeAdapteur extends ArrayAdapter<BikeStation> {
 
 	@Override
 	public int getPosition(BikeStation item) {
-	    return allBike .indexOf(item);
+	    return allBike.indexOf(item);
 	}
 
 	@Override
@@ -65,16 +72,20 @@ public class maListeAdapteur extends ArrayAdapter<BikeStation> {
 	        switch (type) {
 	        case 1:
 	            convertView = mInflater.inflate(R.layout.layout_arrets,parent, false);
-	            holder.name = (TextView) convertView.findViewById(R.id.nomArret);
-	            holder.description = (TextView) convertView.findViewById(R.id.placesArret);
+	            holder.name = (TextView) convertView.findViewById(R.id.name);
+	            holder.description = (TextView) convertView.findViewById(R.id.place);
 	            break;
 	        }
 	        convertView.setTag(holder);
 	    } else {
 	        holder = (ViewHolder) convertView.getTag();
 	    }
-	    holder.name.setText(allBike.get(position).getNomArret());
-	    holder.description.setText(allBike.get(position).getNbrPlacesLibres());
+	    BikeStation bikeStation = allBike.get(position);
+	    float full = (float) Math.min(((float) bikeStation.getNbrPlacesLibres()/bikeStation.getNbrPlaces() )+0.3, 1.0);
+	    
+	    convertView.setBackgroundColor(Color.rgb(255,  Math.round(255*full), Math.round(255*full)));
+	    holder.name.setText(bikeStation.getNomArret());
+	    holder.description.setText(bikeStation.getNbrPlacesLibres()+"/"+bikeStation.getNbrPlaces());
 	    holder.pos = position;
 	    return convertView;
 	}
@@ -97,5 +108,4 @@ public class maListeAdapteur extends ArrayAdapter<BikeStation> {
 	         TextView description;
 	         int pos; //to store the position of the item within the list
 	     }
-
 }
