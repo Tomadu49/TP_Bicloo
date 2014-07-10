@@ -36,12 +36,14 @@ public class MainActivity extends Activity {
 				Log.d("<<<", response.toString());
 				try {
 					Log.d("TOTO", response.getJSONObject(1).getString("name"));
-					final ArrayList<String> list = new ArrayList<String>();
+					final ArrayList<BikeStation> list = new ArrayList<BikeStation>();
 				    for(int i = 0; i<response.length();i++){
-				    	list.add(response.getJSONObject(i).getString("name"));
+				    	BikeStation station = new BikeStation(response.getJSONObject(i).getString("name"), response.getJSONObject(i).getInt("available_bikes"), response.getJSONObject(i).getInt("available_bike_stands"));
+				    	
+				    	list.add(station);
 				    	
 				    }
-				    ArrayAdapter<String> adapter = new ArrayAdapter<String>(self,android.R.layout.simple_list_item_1, list);
+				    ArrayAdapter<BikeStation> adapter = new ArrayAdapter<BikeStation>(self,android.R.layout.simple_list_item_1, list);
 				    mListArrets.setAdapter(adapter);
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
